@@ -1,0 +1,32 @@
+# Basic definitions
+Universe     = vanilla
+Executable   = run_batch_simulation.sh
+arguments	 = --odens $(ODENS) --cdens $(CDENS) --gdens $(GDENS) 
+
+# Request memory and CPUs
+Request_cpus = 10
+Request_memory = 200M
+
+# Select the files that will be needed for the simulation
+transfer_input_files = run_batch_simulation.sh, config/PhysiCell_settings.xml, data_setup.py, project3D
+
+# Transfer outputs to the cluster
+should_transfer_files = YES
+WhenToTransferOutput = ON_EXIT_OR_EVICT
+# Log and error files will be saved in a log folder (do not forget to create it)
+Log    = log/project.log
+Error  = log/project_o$REAL(ODENS,%05.2f)_c$REAL(CDENS,%05.2f)_g$REAL(GDENS,%05.2f).err
+Output = log/project_o$REAL(ODENS,%05.2f)_c$REAL(CDENS,%05.2f)_g$REAL(GDENS,%05.2f).out
+# Output files will be downloaded to the current directory as a compressed folder
+transfer_output_files = results_o$REAL(ODENS,%05.2f)_c$REAL(CDENS,%05.2f)_g$REAL(GDENS,%05.2f).tar.bz2
+
+# ODENS = O2 INITIAL DENSITY
+# CDENS = COLLAGEN INITIAL DENSITY
+# GDENS = GLUCOSE INITIAL DENSITY
+
+queue ODENS, CDENS, GDENS from (
+16.5, 2.5, 4.0
+16.5, 4.0, 4.0
+16.5, 6.0, 4.0
+)
+
